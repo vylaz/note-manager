@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(217, 217, 217);
+        }
+
+        .note {
+            border: 1px solid black;
+            padding: 10px;
+            background-color: rgb(255, 255, 117);
+            margin: 10px;
+        }
+
+        .note h1 {
+            margin: 0;
+        }
+
+        .note p {
+            margin: 0;
+        }
+
+        .notes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input {
+            margin: 10px;
+        }
+
+        button {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="notes">
+        <!-- add notes here -->
+    </div>
+
+    <form>
+        <input type="text" name="title" placeholder="Title">
+        <input type="text" name="body" placeholder="Body">
+        <button type="submit" id="add-note">Add Note</button>
+        <button type="submit" id="clear-notes">Clear Notes</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        let notes = [{
+            title: "Hello",
+            body: "This is your first note!"
+        }]
+
+        if (localStorage.getItem('notes')) {
+            notes = JSON.parse(localStorage.getItem('notes'))
+        }
+
+        $('#clear-notes').click(e => {
+            e.preventDefault()
+            notes = []
+            $('.notes').html('')
+            localStorage.setItem('notes', JSON.stringify(notes))
+        })
+
+        notes.forEach(note => {
+            $('.notes').append(`
+                <div class="note">
+                    <h1>${note.title}</h1>
+                    <p>${note.body}</p>
+                </div>
+            `)
+            localStorage.setItem('notes', JSON.stringify(notes))
+        })
+
+        $('#add-note').click(e => {
+            e.preventDefault()
+            let title = $('input[name="title"]').val()
+            let body = $('input[name="body"]').val()
+            if (title === '' || body === '') {
+                alert('Please fill in all fields')
+                return
+            }
+            notes.push({ title, body })
+            $('.notes').append(`
+            <div class="note">
+                <h1>${title}</h1>
+                <p>${body}</p>
+                </div>
+                `)
+            localStorage.setItem('notes', JSON.stringify(notes))
+            $('input').val('')
+        })
+    </script>
+</body>
+
+</html>
